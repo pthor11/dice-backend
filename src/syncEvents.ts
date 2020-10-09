@@ -57,9 +57,9 @@ const syncEvents = async () => {
 
         const events = count ? await updateEvents() : await getAllEvents()
 
-        console.log({ count, events: events.length })
-
         if (events.length > 0) {
+            console.log({ count, events: events.length })
+
             await db.collection(collectionNames.events).insertMany(events.map(event => {
                 return {
                     processed: false,
