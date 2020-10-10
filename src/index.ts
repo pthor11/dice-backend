@@ -1,7 +1,7 @@
 import { connectDb } from "./mongo";
 import { processEvent } from "./processEvent";
 import { syncEvents } from "./syncEvents";
-import { getDiceContract, tronweb } from "./tronweb"
+import { getDiceContract } from "./tronweb"
 const TronTxDecoder = require('tron-tx-decoder');
 
 const decoder = new TronTxDecoder({ mainnet: false });

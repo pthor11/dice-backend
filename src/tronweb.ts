@@ -6,11 +6,11 @@ const tronweb = new TronWeb({
     privateKey: privateKey
 })
 
-let diceContract: any
+let DiceContract: any
 
 const getDiceContract = async () => {
     try {
-        diceContract = await tronweb.contract().at(contract)
+        DiceContract = await tronweb.contract().at(contract)
         console.log(`Dice contract reached`)
     } catch (e) {
         throw e
@@ -19,6 +19,6 @@ const getDiceContract = async () => {
 
 export {
     tronweb,
-    diceContract,
-    getDiceContract
+    getDiceContract,
+    DiceContract
 }

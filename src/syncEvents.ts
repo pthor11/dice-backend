@@ -34,17 +34,24 @@ const updateEvents = async (_fingerprint?: string, _events: any[] = [], refEvent
 
         if (_fingerprint) url += `&fingerprint=${_fingerprint}`
 
+        // console.log({ url })
+
         const { data } = await axios.get(url)
 
         // console.log({ data })
 
         const events = data.data
 
-        if (events.find(event => event.transaction_id === refEvent.raw.transaction_id)) return events.filter(event => event.block_number > refEvent.raw.block_number)
+        const totalEvents = [..._events, ...events]
+
+        if (totalEvents.find(event => event.transaction_id === refEvent.raw.transaction_id)) return totalEvents.filter(event => event.block_number > refEvent.raw.block_number)
 
         const fingerprint = data.meta?.fingerprint
 
-        return fingerprint ? updateEvents(fingerprint, [..._events, ...events]) : [..._events, ...events]
+        // console.log({ fingerprint })
+
+        return fingerprint ? updateEvents(fingerprint, totalEvents) : totalEvents
+
     } catch (e) {
         throw e
     }
@@ -71,10 +78,10 @@ const syncEvents = async () => {
             console.log(`syncEvents`, events.length);
         }
 
-        setTimeout(syncEvents, 1000)
+        setTimeout(syncEvents, 2000)
     } catch (e) {
-        setTimeout(syncEvents, 1000)
-        throw e
+        setTimeout(syncEvents, 2000)
+        console.error(e.response?.data.error || e.message)
     }
 }
 

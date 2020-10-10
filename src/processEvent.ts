@@ -1,5 +1,5 @@
 import { collectionNames, db } from "./mongo"
-import { diceContract } from "./tronweb"
+import { DiceContract } from "./tronweb"
 
 const processEvent = async () => {
     try {
@@ -10,12 +10,15 @@ const processEvent = async () => {
             limit: 1
         })
 
-        console.log({ unprocessedEvent })
+        if (unprocessedEvent) {
+            // const result = await diceContract.settle(unprocessedEvent.raw.result.user).send({ calValue: 0 })
 
-        // const result = await diceContract.settle(unprocessedEvent.raw.result.user).send({ calValue: 0 })
+            // console.log({ result })
+        }
 
-        // console.log({ result })
+        setTimeout(processEvent, 1000)
     } catch (e) {
+        setTimeout(processEvent, 1000)
         throw e
     }
 }
