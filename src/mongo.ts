@@ -7,6 +7,7 @@ let db: Db
 
 const collectionNames = {
     events: 'events',
+    bets: 'bets',
     users: 'users'
 }
 
