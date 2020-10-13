@@ -1,12 +1,15 @@
 pragma solidity ^0.5.8;
+
 interface TRC20 {
     function transferFrom(
         address _from,
         address _to,
         uint256 _value
     ) external;
+
     function transfer(address _to, uint256 _value) external;
 }
+
 contract DiceLumi {
     //Currency: 0:TRX
     //Type: 0:Under 1:Over
@@ -14,7 +17,7 @@ contract DiceLumi {
     //Value: Bet value
     //Save
     //Data: %10 => type ;%1000/10 => number; %10**13/1000 => blocknumber ;/10**23 => value; %10**23/10**13 => blocktime
-    event Bet(address user,uint data);
+    event Bet(address user, uint256 data);
     mapping(address => uint256) public bets;
     address owner;
     uint256 minBet = 1e6;
@@ -24,10 +27,12 @@ contract DiceLumi {
         require(msg.sender == owner, "Must be owner");
         _;
     }
+
     constructor(address _token) public {
         owner = msg.sender;
         token = TRC20(_token);
     }
+
     function dicecoSayHi(
         uint8 _direction,
         uint8 _modulo,
@@ -40,16 +45,17 @@ contract DiceLumi {
             "Wrong bet!"
         );
         token.transferFrom(msg.sender, address(this), _value);
-        uint dataBet = _value *
+        uint256 dataBet = _value *
             10**23 +
             block.number *
             1000 +
-            _modulo *
+            uint256(_modulo) *
             10 +
-            _direction;
+            uint256(_direction);
         bets[msg.sender] = dataBet;
-        emit Bet(msg.sender,dataBet);
+        emit Bet(msg.sender, dataBet);
     }
+
     function settle(address _user) public returns (uint256) {
         uint256 _bet = bets[_user];
         require(_bet != 0, "Must be have bet");
@@ -80,6 +86,7 @@ contract DiceLumi {
         bets[_user] = 0;
         return _bet;
     }
+
     function adminSettle(address _user, bytes32 _blockhash)
         public
         onlyOwner
