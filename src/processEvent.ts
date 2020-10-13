@@ -1,5 +1,7 @@
 import { client, collectionNames, db } from "./mongo"
-import { DiceContract } from "./tronweb"
+import { Bet } from "./models/Bet"
+import { DiceContract, tronweb } from "./tronweb"
+import { decodeBetData } from "./util"
 
 const processEvent = async () => {
     const session = client.startSession()
@@ -14,43 +16,75 @@ const processEvent = async () => {
         })
 
         if (unprocessedEvent) {
-            const address = unprocessedEvent.raw.result.user
+            let address = unprocessedEvent.raw?.result?.user
+            const data = unprocessedEvent.raw?.result?.data
+            const betTx = unprocessedEvent.raw.transaction_id
+            const block_number = unprocessedEvent.raw.block_number
+            const block_time = unprocessedEvent.raw.block_timestamp
+
+            if (!address) throw new Error(`address not found in bet event`)
+            if (!data) throw new Error(`data not found in bet event`)
+            if (!betTx) throw new Error(`transaction_id not found in bet event`)
+            if (!block_number) throw new Error(`block_number not found in bet event`)
+            if (!block_time) throw new Error(`block_time not found in bet event`)
+
+            address = tronweb.address.fromHex(address)
+
+            const { type, modulo, value } = decodeBetData(data)
 
             const bet: Bet = {
                 address,
                 data: {
-                    type: 0,
-                    modulo: 50,
-                    value: 1000
+                    type,
+                    modulo,
+                    value,
+                    blockNumber: block_number,
+                    blockTime: new Date(block_time)
                 },
-                betTx: unprocessedEvent.raw.transaction_id,
+                betTx,
                 updatedAt: new Date(),
                 createdAt: new Date()
             }
 
             const { insertedId } = await db.collection(collectionNames.bets).insertOne(bet, { session })
 
-            await db.collection(collectionNames.users).updateOne({ address }, {
+            console.log({ insertedId })
+
+            const user = await db.collection(collectionNames.users).findOneAndUpdate({ address }, {
                 $set: {
                     currentBet: insertedId,
                     updatedAt: new Date()
+                },
+                $setOnInsert: {
+                    createdAt: new Date()
+                }
+            }, {
+                returnOriginal: false,
+                upsert: true,
+                session
+            })
+
+            console.log({ user })
+
+            await db.collection(collectionNames.events).updateOne({ _id: unprocessedEvent._id }, {
+                $set: {
+                    processed: true,
+                    updatedAt: new Date()
                 }
             }, { session })
-            // const result = await diceContract.settle(unprocessedEvent.raw.result.user).send({ calValue: 0 })
 
-            // console.log({ result })
+            await session.commitTransaction()
+        } else {
+            await session.abortTransaction()
         }
-
-        await session.commitTransaction()
 
         session.endSession()
 
         setTimeout(processEvent, 1000)
     } catch (e) {
-        setTimeout(processEvent, 1000)
         await session.abortTransaction()
         session.endSession()
-
+        setTimeout(processEvent, 1000)
         throw e
     }
 }
