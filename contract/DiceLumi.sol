@@ -56,63 +56,83 @@ contract DiceLumi {
         emit Bet(msg.sender, dataBet);
     }
 
-    function settle(address _user) public returns (uint256) {
+    function settle(address _user)
+        public
+        returns (uint256 result, uint256 payout)
+    {
         uint256 _bet = bets[_user];
         require(_bet != 0, "Must be have bet");
         uint256 blockNumber = (_bet % 10**13) / 1000;
         require(block.number < blockNumber + 255, "blockhash valid time");
-        uint256 result = uint256(
-            keccak256(
-                abi.encodePacked(
-                    _user,
-                    blockhash(blockNumber),
-                    (_bet % (10**23)) / 10**13
+        result =
+            uint256(
+                keccak256(
+                    abi.encodePacked(
+                        _user,
+                        blockhash(blockNumber),
+                        (_bet % (10**23)) / 10**13
+                    )
                 )
-            )
-        ) % 100;
+            ) %
+            100;
         uint256 number = (_bet % 1000) / 10;
         uint256 value = _bet / 10**23;
         if (_bet % 10 == 0) {
             //Under
             if (number < result) {
-                token.transfer(_user, (value * 98) / number);
+                payout = (value * 98) / number;
+                token.transfer(_user, payout);
+            } else {
+                payout = 0;
             }
         } else {
             //Over
             if (number > result) {
-                token.transfer(_user, (value * 98) / (99 - number));
+                payout = (value * 98) / (99 - number);
+                token.transfer(_user, payout);
+            } else {
+                payout = 0;
             }
         }
         bets[_user] = 0;
-        return _bet;
     }
 
     function adminSettle(address _user, bytes32 _blockhash)
         public
-        onlyOwner
-        returns (uint256)
+        returns (uint256 result, uint256 payout)
     {
         uint256 _bet = bets[_user];
         require(_bet != 0, "Must be have bet");
-        uint256 result = uint256(
-            keccak256(
-                abi.encodePacked(_user, _blockhash, (_bet % (10**23)) / 10**13)
-            )
-        ) % 100;
+        result =
+            uint256(
+                keccak256(
+                    abi.encodePacked(
+                        _user,
+                        _blockhash,
+                        (_bet % (10**23)) / 10**13
+                    )
+                )
+            ) %
+            100;
         uint256 number = (_bet % 1000) / 10;
         uint256 value = _bet / 10**23;
         if (_bet % 10 == 0) {
             //Under
             if (number < result) {
-                token.transfer(_user, (value * 98) / number);
+                payout = (value * 98) / number;
+                token.transfer(_user, payout);
+            } else {
+                payout = 0;
             }
         } else {
             //Over
             if (number > result) {
-                token.transfer(_user, (value * 98) / (99 - number));
+                payout = (value * 98) / (99 - number);
+                token.transfer(_user, payout);
+            } else {
+                payout = 0;
             }
         }
         bets[_user] = 0;
-        return _bet;
     }
 }
