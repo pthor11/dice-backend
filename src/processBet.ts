@@ -115,12 +115,11 @@ const processBet = async () => {
 
         setTimeout(processBet, 1000)
     } catch (e) {
+        console.error(e)
         await session.abortTransaction()
         session.endSession()
 
         setTimeout(processBet, 1000)
-
-        throw e
     }
 }
 

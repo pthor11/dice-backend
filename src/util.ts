@@ -1,23 +1,5 @@
-/* 
-    //Currency: 0:TRX
-    //Type: 0:Under 1:Over
-    //Modulo: Number compare
-    //Value: Bet value
-    //Save
-    //Data: %10 => type ;%1000/10 => number; %10**13/1000 => blocknumber ;/10**23 => value; %10**23/10**13 => blocktime
-
-uint dataBet = _value *
-            10**23 +
-            block.number *
-            1000 +
-            _modulo *
-            10 +
-            _direction;
-*/
-
 import BN from "bignumber.js";
 import TronTxDecoder from 'tron-tx-decoder';
-
 
 const decoder = new TronTxDecoder({ mainnet: false })
 
@@ -30,9 +12,10 @@ const decodeSettleResult = async (params: { tx: string }): Promise<{ result: num
             decoder.decodeRevertMessage(params.tx)
         ])
 
-        if (!decodedResult || !decodedRevert) return 'pending'
+        console.log('decodedResult', decodedResult)
+        console.log('decodedRevert', decodedRevert)
 
-        console.log({ decodedResult, decodedRevert })
+        if (!decodedResult || !decodedRevert) return 'pending'
 
         const result = decodedResult?.decodedOutput?.['0']
         const payout = decodedResult?.decodedOutput?.['1']
@@ -45,6 +28,7 @@ const decodeSettleResult = async (params: { tx: string }): Promise<{ result: num
 
         return { revert: decodedRevert.revertMessage }
     } catch (e) {
+        console.error(e)
         if (e.message === 'Transaction not found') return 'pending'
         if (e.message === `Cannot read property '0' of undefined`) return 'pending'
         throw e
