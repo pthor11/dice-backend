@@ -2,8 +2,9 @@ import axios from "axios";
 import { Bet, Revert } from "./models/Bet"
 import { client, collectionNames, db } from "./mongo"
 import { DiceContract, tronweb } from "./tronweb"
-import { fullHost } from "./config";
+import { fullHost, kafkaConfig } from "./config";
 import { decodeSettleResult } from "./util";
+import { producer } from "./kafka";
 
 const getLatestBlockHash = async (): Promise<string> => {
     try {
@@ -88,12 +89,15 @@ const processBet = async () => {
 
                 } else if (!revert) {
 
-                    await db.collection(collectionNames.bets).updateOne({ _id: bet._id }, {
+                    const { value } = await db.collection(collectionNames.bets).findOneAndUpdate({ _id: bet._id }, {
                         $set: {
                             result,
                             payout
                         }
-                    }, { session })
+                    }, {
+                        session,
+                        returnOriginal: false
+                    })
 
                     await db.collection(collectionNames.users).updateOne({ address: bet.address }, {
                         $set: {
@@ -102,8 +106,15 @@ const processBet = async () => {
                         $unset: { currentBet: '' }
                     }, { session })
 
+                    const record = await producer.send({
+                        topic: kafkaConfig.topic.settle,
+                        messages: [{ value: JSON.stringify(value) }]
+                    })
+
+                    console.log({ record })
+
                     await session.commitTransaction()
-                } 
+                }
             }
 
             session.endSession()
