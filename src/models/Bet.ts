@@ -18,7 +18,7 @@ type Bet = {
     address: string
     data: BetData
     result?: number
-    payout?:number
+    payout?: number
     revert?: string
     betTx: string
     settleTx?: string
