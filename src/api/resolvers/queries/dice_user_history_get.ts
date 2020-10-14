@@ -1,6 +1,6 @@
 import { collectionNames, db } from "../../mongo"
 
-const dice_history_get = async (root: any, args: any, ctx: any) => {
+const dice_user_history_get = async (root: any, args: any, ctx: any) => {
     try {
         const address = args.address
         const page = args.page
@@ -30,4 +30,4 @@ const dice_history_get = async (root: any, args: any, ctx: any) => {
     }
 }
 
-export { dice_history_get }
+export { dice_user_history_get }
