@@ -13,6 +13,8 @@ type User {
 
 type Query {
     dice_user_get(address: String!): User
+    dice_leaderboard_get(quantity: Int!): [User!]!
+    # dice_activities_get(quantity: Int!): JSON
 }
 
 `
