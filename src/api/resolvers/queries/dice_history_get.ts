@@ -10,7 +10,7 @@ const dice_history_get = async (root: any, args: any, ctx: any) => {
 
         if (page < 0 || pageSize < 0) throw new Error(`invalid page or pageSize`)
 
-        const bets = await db.collection(collectionNames.bets).find({ address, result: { $exists: true } }).sort({ "data.blockNumber": -1 }).limit(page * pageSize).toArray()
+        const bets = await db.collection(collectionNames.bets).find({ address, result: { $exists: true } }).sort({ "data.blockNumber": -1 }).limit(pageSize).skip(page * pageSize).toArray()
 
         const history = bets.map(bet => {
             return {
