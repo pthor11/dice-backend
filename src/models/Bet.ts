@@ -13,11 +13,6 @@ type BetData = {
     blockTime: Date
 }
 
-type BetResult = {
-    value: number
-    payout: number
-}
-
 type Bet = {
     _id?: ObjectID
     address: string

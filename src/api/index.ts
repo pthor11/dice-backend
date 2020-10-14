@@ -1,7 +1,7 @@
 import { ApolloServerPluginInlineTraceDisabled } from "apollo-server-core";
 import { buildFederatedSchema } from "@apollo/federation"
 import { ApolloServer } from "apollo-server"
-import { connectDb } from "../mongo"
+import { connectDb } from "./mongo"
 import { typeDefs } from "./typeDefs/schema"
 import { resolvers } from "./resolvers"
 import { port } from "./config"

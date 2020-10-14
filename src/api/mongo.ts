@@ -48,9 +48,9 @@ const connectDb = async () => {
 
         db = client.db()
 
-        console.log(`Mongodb: connected`)
+        console.log(`Mongodb Api: connected`)
     } catch (e) {
-        console.error(`Mongodb: disconnected`)
+        console.error(`Mongodb Api: disconnected`)
         await client?.close(true)
         setTimeout(connectDb, 1000)
         throw e
