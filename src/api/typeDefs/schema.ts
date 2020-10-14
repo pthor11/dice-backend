@@ -14,13 +14,24 @@ type User {
 type Activity {
     address: String!
     payout: Int!
-    updatedAt: Date
+    updatedAt: Date!
+}
+
+type Bet {
+    type: Int!
+    modulo: Int!
+    value: Int!
+    multiplier: Float!
+    result: Int!
+    payout: Int!
+    time: Date!
 }
 
 type Query {
     dice_user_get(address: String!): User
     dice_leaderboard_get(quantity: Int!): [User!]!
     dice_activities_get(quantity: Int!): [Activity!]!
+    dice_history_get(address: String!, page: Int!, pageSize: Int!): [Bet!]!
 }
 
 `
