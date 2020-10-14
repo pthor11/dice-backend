@@ -31,7 +31,11 @@ type Query {
     dice_user_get(address: String!): User
     dice_leaderboard_get(quantity: Int!): [User!]!
     dice_activities_get(quantity: Int!): [Activity!]!
-    dice_history_get(address: String!, page: Int!, pageSize: Int!): [Bet!]!
+    dice_user_history_get(address: String!, page: Int!, pageSize: Int!): [Bet!]!
+}
+
+type Subscription {
+    dice_user_subscription(address: String!): Bet
 }
 
 `

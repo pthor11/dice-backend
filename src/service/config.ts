@@ -29,7 +29,7 @@ if (process.env.KAFKA_MECHANISM && !process.env.KAFKA_USERNAME) throw new Error(
 if (process.env.KAFKA_MECHANISM && !process.env.KAFKA_PASSWORD) throw new Error(`Kafka password must be provided with mechanism ${process.env.KAFKA_MECHANISM}`)
 
 export const kafkaConfig = {
-    clientId: process.env.KAFKA_CLIENT_ID,
+    clientId: process.env.KAFKA_CLIENT_ID_SERVICE,
     brokers: process.env.KAFKA_BROKERS,
     mechanism: process.env.KAFKA_MECHANISM,
     username: process.env.KAFKA_USERNAME,

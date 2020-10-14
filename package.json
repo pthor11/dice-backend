@@ -14,9 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@apollo/federation": "^0.20.4",
     "apollo-server": "^2.18.2",
-    "apollo-server-core": "^2.18.2",
     "axios": "^0.20.0",
     "bignumber.js": "^9.0.1",
     "dotenv": "^8.2.0",
