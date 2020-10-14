@@ -55,6 +55,9 @@ const processEvent = async () => {
                     currentBet: insertedId,
                     updatedAt: new Date()
                 },
+                $inc: {
+                    totalWager: value
+                },
                 $setOnInsert: {
                     createdAt: new Date()
                 }
