@@ -16,7 +16,7 @@ const dice_user_subscription = {
             type: payload.data.type,
             modulo: payload.data.modulo,
             value: payload.data.value,
-            multiplier: Number(98 / (payload.data.modulo < payload.result ? payload.data.modulo : 99 - payload.data.modulo)).toFixed(2),
+            multiplier: Number(98 / (payload.data.type === 0 ? payload.data.modulo : (99 - payload.data.modulo))).toFixed(2),
             result: payload.result,
             payout: payload.payout,
             time: payload.data.blockTime

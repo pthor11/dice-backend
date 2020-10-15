@@ -22,7 +22,7 @@ const dice_user_history_get = async (root: any, args: any, ctx: any) => {
                     type: bet.data.type,
                     modulo: bet.data.modulo,
                     value: bet.data.value,
-                    multiplier: Number(98 / (bet.data.modulo < bet.result ? bet.data.modulo : 99 - bet.data.modulo)).toFixed(2),
+                    multiplier: Number(98 / (bet.data.type === 0 ? bet.data.modulo : (99 - bet.data.modulo))).toFixed(2),
                     result: bet.result,
                     payout: bet.payout,
                     time: bet.data.blockTime
