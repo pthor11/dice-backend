@@ -1,8 +1,8 @@
 import { withFilter } from "apollo-server";
-import { pubsub } from "./pubsub";
+import { pubsub, subtopic } from "./pubsub";
 
 const dice_user_subscription = {
-    subscribe: withFilter(() => pubsub.asyncIterator('dice_user_subscription'), (payload, variables) => {
+    subscribe: withFilter(() => pubsub.asyncIterator(subtopic.new_bet), (payload, variables) => {
         console.log({ payload })
 
         const address = variables.address

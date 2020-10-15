@@ -41,6 +41,7 @@ type Query {
 
 type Subscription {
     dice_user_subscription(address: String!): Bet
+    dice_activities_subscription: Activity!
 }
 
 `

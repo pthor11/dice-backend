@@ -1,7 +1,6 @@
 import { EachMessagePayload } from "kafkajs"
 import { ObjectID } from "mongodb"
-import { db, collectionNames } from "./mongo"
-import { pubsub } from "./resolvers/subscriptions/pubsub"
+import { pubsub, subtopic } from "./resolvers/subscriptions/pubsub"
 
 type KafkaMessage = {
     _id: ObjectID
@@ -35,7 +34,7 @@ const processKafkaMessage = async (payload: EachMessagePayload) => {
 
         console.log({ data })
 
-        pubsub.publish('dice_user_subscription', data)
+        pubsub.publish(subtopic.new_bet, data)
     } catch (e) {
         throw e
     }

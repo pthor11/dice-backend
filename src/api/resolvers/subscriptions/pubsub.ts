@@ -2,4 +2,11 @@ import { PubSub } from 'apollo-server';
 
 const pubsub = new PubSub()
 
-export { pubsub }
+const subtopic = {
+    'new_bet': 'new_bet'
+}
+
+export {
+    pubsub,
+    subtopic
+}
