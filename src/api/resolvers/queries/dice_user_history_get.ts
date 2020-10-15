@@ -10,19 +10,25 @@ const dice_user_history_get = async (root: any, args: any, ctx: any) => {
 
         if (page < 0 || pageSize < 0) throw new Error(`invalid page or pageSize`)
 
-        const bets = await db.collection(collectionNames.bets).find({ address, result: { $exists: true } }).sort({ "data.blockNumber": -1 }).limit(pageSize).skip(page * pageSize).toArray()
+        const [total, bets] = await Promise.all([
+            db.collection(collectionNames.bets).countDocuments({ address, result: { $exists: true } }),
+            db.collection(collectionNames.bets).find({ address, result: { $exists: true } }).sort({ "data.blockNumber": -1 }).limit(pageSize).skip(page * pageSize).toArray()
+        ])
 
-        const history = bets.map(bet => {
-            return {
-                type: bet.data.type,
-                modulo: bet.data.modulo,
-                value: bet.data.value,
-                multiplier: Number(98 / (bet.data.modulo < bet.result ? bet.data.modulo : 99 - bet.data.modulo)).toFixed(2),
-                result: bet.result,
-                payout: bet.payout,
-                time: bet.data.blockTime
-            }
-        })
+        const history = {
+            total,
+            bets: bets.map(bet => {
+                return {
+                    type: bet.data.type,
+                    modulo: bet.data.modulo,
+                    value: bet.data.value,
+                    multiplier: Number(98 / (bet.data.modulo < bet.result ? bet.data.modulo : 99 - bet.data.modulo)).toFixed(2),
+                    result: bet.result,
+                    payout: bet.payout,
+                    time: bet.data.blockTime
+                }
+            })
+        }
 
         return history
     } catch (e) {
