@@ -13,7 +13,8 @@ const start = async () => {
 
         const server = new ApolloServer({
             typeDefs,
-            resolvers
+            resolvers,
+            subscriptions: { path: '/' }
         })
 
         const { url } = await server.listen({ port })
