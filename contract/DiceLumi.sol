@@ -79,7 +79,7 @@ contract DiceLumi {
         uint256 value = _bet / 10**23;
         if (_bet % 10 == 0) {
             //Under
-            if (number < result) {
+            if (number > result) {
                 payout = (value * 98) / number;
                 token.transfer(_user, payout);
             } else {
@@ -87,7 +87,7 @@ contract DiceLumi {
             }
         } else {
             //Over
-            if (number > result) {
+            if (number < result) {
                 payout = (value * 98) / (99 - number);
                 token.transfer(_user, payout);
             } else {
