@@ -4,10 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "rm -rf dist && tsc",
+    "start:api": "node dist/api/index.js",
+    "start:service": "node dist/service/index.js",
     "dev:api": "ts-node src/api/index.ts",
     "dev:service": "ts-node src/service/index.ts",
     "dev:api:log": "nodemon --watch 'src/**/*.ts' --exec ts-node src/api/index.ts",
     "dev:service:log": "nodemon --watch 'src/**/*.ts' --exec ts-node src/service/index.ts",
+    "dep:api": "docker-compose -f docker-compose.api.yml up --build --remove-orphans -d",
+    "dep:service": "docker-compose -f docker-compose.service.yml up --build --remove-orphans -d",
+    "dep:api:log": "docker-compose -f docker-compose.api.yml up --build --remove-orphans",
+    "dep:service:log": "docker-compose -f docker-compose.service.yml up --build --remove-orphans",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
