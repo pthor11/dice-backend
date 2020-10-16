@@ -135,4 +135,21 @@ contract DiceLumi {
         }
         bets[_user] = 0;
     }
+
+    function getResult(
+        address _user,
+        uint256 _bet,
+        bytes32 _blockHash
+    ) public pure returns (uint256) {
+        return
+            uint256(
+                keccak256(
+                    abi.encodePacked(
+                        _user,
+                        _blockHash,
+                        (_bet % (10**23)) / 10**13
+                    )
+                )
+            ) % 100;
+    }
 }
