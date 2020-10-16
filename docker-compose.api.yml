@@ -1,10 +1,11 @@
 version: "3.7"
 
 services:
-  finalizer:
-    container_name: dice-api
+  dice-api:
     build:
       context: .
       dockerfile: Dockerfile.api
+    ports:
+      - 8001:8001
     env_file: .api.env
     restart: always

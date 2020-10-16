@@ -68,7 +68,7 @@ const processBet = async () => {
                             }
                         }, { session })
 
-                    } else if (revert === Revert["blockhash valid time"]) {
+                    } else {
 
                         const blockHash = await getLatestBlockHash()
                         console.log({ blockHash })

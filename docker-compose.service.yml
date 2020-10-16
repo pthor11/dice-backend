@@ -1,8 +1,7 @@
 version: "3.7"
 
 services:
-  finalizer:
-    container_name: dice-service
+  dice-service:
     build:
       context: .
       dockerfile: Dockerfile.service
