@@ -4,7 +4,8 @@ import { contract, fullHost } from "./config"
 
 const getAllEvents = async (_fingerprint?: string, _events: any[] = []) => {
     try {
-        let url = `${fullHost}/v1/contracts/${contract}/events?only_confirmed=true&event_name=Bet&limit=1`
+        // let url = `${fullHost}/v1/contracts/${contract}/events?only_confirmed=true&event_name=Bet&limit=1`
+        let url = `${fullHost}/v1/contracts/${contract}/events?event_name=Bet&limit=1`
 
         if (_fingerprint) url += `&fingerprint=${_fingerprint}`
 
@@ -30,7 +31,8 @@ const updateEvents = async (_fingerprint?: string, _events: any[] = [], refEvent
 
         // console.log({ refEvent })
 
-        let url = `${fullHost}/v1/contracts/${contract}/events?only_confirmed=true&event_name=Bet&limit=1`
+        // let url = `${fullHost}/v1/contracts/${contract}/events?only_confirmed=true&event_name=Bet&limit=1`
+        let url = `${fullHost}/v1/contracts/${contract}/events?event_name=Bet&limit=1`
 
         if (_fingerprint) url += `&fingerprint=${_fingerprint}`
 
