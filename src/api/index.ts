@@ -3,18 +3,14 @@ import { connectDb } from "./mongo"
 import { typeDefs } from "./typeDefs/schema"
 import { resolvers } from "./resolvers"
 import { port } from "./config"
-import { connectKafkaConsumer } from "./kafka";
 
 const start = async () => {
     try {
         await connectDb()
 
-        await connectKafkaConsumer()
-
         const server = new ApolloServer({
             typeDefs,
-            resolvers,
-            subscriptions: { path: '/' }
+            resolvers
         })
 
         const { url } = await server.listen({ port })

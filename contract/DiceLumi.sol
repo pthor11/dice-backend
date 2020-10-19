@@ -47,9 +47,9 @@ contract DiceLumi {
         );
         token.transferFrom(msg.sender, address(this), _value);
         uint256 dataBet = _value *
-            10**23 +
+            1e23 +
             block.number *
-            1000 +
+            1e3 +
             uint256(_modulo) *
             10 +
             uint256(_direction);
