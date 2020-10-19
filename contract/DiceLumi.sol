@@ -18,6 +18,7 @@ contract DiceLumi {
     //Save
     //Data: %10 => type ;%1000/10 => number; %10**13/1000 => blocknumber ;/10**23 => value; %10**23/10**13 => blocktime
     event Bet(address user, uint256 data);
+    event BetSettle(address user, uint256 result, uint256 payout);
     mapping(address => uint256) public bets;
     address owner;
     uint256 minBet = 1e6;
@@ -95,6 +96,7 @@ contract DiceLumi {
             }
         }
         bets[_user] = 0;
+        emit BetSettle(_user, result, payout);
     }
 
     function adminSettle(address _user, bytes32 _blockhash)
@@ -134,6 +136,7 @@ contract DiceLumi {
             }
         }
         bets[_user] = 0;
+        emit BetSettle(_user, result, payout);
     }
 
     function getResult(
