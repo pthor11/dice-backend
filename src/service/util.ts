@@ -1,5 +1,8 @@
+import Web3 from "web3";
 import BN from "bignumber.js";
 import TronTxDecoder from 'tron-tx-decoder';
+
+const web3 = new Web3()
 
 const decoder = new TronTxDecoder({ mainnet: false })
 
@@ -24,7 +27,7 @@ const decodeSettleResult = async (params: { tx: string }): Promise<{ result: num
         if (txStatus === 'SUCCESS') return {
             result: new BN(result).toNumber(),
             payout: new BN(payout).toNumber()
-        } 
+        }
 
         return { revert: decodedRevert.revertMessage }
     } catch (e) {
@@ -48,11 +51,23 @@ const decodeBetData = (data: string): { type: number, modulo: number, value: num
     }
 }
 
-export {
-    decodeBetData,
-    decodeSettleResult
+const calculateBetResult = (params: { address: string, blockHash: string, betData: number }): number => {
+    if (!params.address) throw new Error(`calculateBetResult address notfound`)
+    if (!params.blockHash) throw new Error(`calculateBetResult blockHash notfound`)
+    if (!params.betData) throw new Error(`calculateBetResult betData notfound`)
+
+    const value = new BN(params.betData).mod(10 ** 23).div(10 ** 13).toFixed(0)
+    console.log({ value });
+
+    const hex = web3.utils.soliditySha3Raw({ type: 'address', value: params.address }, { type: 'bytes32', value: params.blockHash }, { type: 'uint256', value })
+
+    const result = new BN(hex!).mod(100).toNumber()
+
+    return result
 }
 
-// console.log(decodeBetData("10000000000000008809293500"))
-// decodeSettleResult({ tx: '137e0ad4545ea8e9c50990a7ce090181ceedae63d62822201489638fcdf8f878' }).then(console.log)
-// decodeSettleResult({ tx: '137e0ad4545ea8e9c50990a7ce090181ceedae63d62822201489638fcdf8f878' }).then(console.log)
+export {
+    decodeBetData,
+    decodeSettleResult,
+    calculateBetResult
+}
